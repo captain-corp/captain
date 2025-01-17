@@ -1,10 +1,10 @@
 {{ template "admin_header" . }}
 <div class="min-h-96">
-    <h1 class="text-4xl text-bold mb-4">Dashboard</h1>
+    <h1 class="text-4xl text-bold mb-4 text-gray-900 dark:text-gray-400">Dashboard</h1>
 
     <div class="grid grid-cols-1 gap-8 p-4 lg:grid-cols-2 xl:grid-cols-4">
         <!-- Posts card -->
-        <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <div class="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <div>
                 <h6 class="text-xs font-medium leading-none tracking-wider text-gray-500 uppercase dark:text-gray-400">
                     Posts
@@ -21,7 +21,7 @@
         </div>
 
         <!-- Pages card -->
-        <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <div class="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <div>
                 <h6 class="text-xs font-medium leading-none tracking-wider text-gray-500 uppercase dark:text-gray-400">
                     Pages
@@ -38,7 +38,7 @@
         </div>
 
         <!-- Users card -->
-        <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <div class="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <div>
                 <h6 class="text-xs font-medium leading-none tracking-wider text-gray-500 uppercase dark:text-gray-400">
                     Users
@@ -55,7 +55,7 @@
         </div>
 
         <!-- Tags card -->
-        <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <div class="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <div>
                 <h6 class="text-xs font-medium leading-none tracking-wider text-gray-500 uppercase dark:text-gray-400">
                     Tags
@@ -73,7 +73,7 @@
         </div>
     </div>
     <div class="mt-8">
-        <h2 class="text-2xl mb-4">Recent Posts</h2>
+        <h2 class="text-2xl mb-4 text-gray-900 dark:text-gray-400">Recent Posts</h2>
         {{if .recentPosts}}
 
         <div class="relative overflow-x-auto rounded-lg">
