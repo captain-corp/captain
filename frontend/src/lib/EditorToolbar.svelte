@@ -101,9 +101,9 @@
 </script>
 
 <div>
-  <button data-command="Bold" onclick={executeCommand}>B</button>
-  <button data-command="Italic" onclick={executeCommand}>I</button>
-  <button>H</button>
+  <button data-command="Bold" onclick={executeCommand} class="font-bold border border-black dark:border-gray-400 text-black dark:text-white">B</button>
+  <button data-command="Italic" onclick={executeCommand} class="font-italic border border-black dark:border-gray-400 text-black dark:text-white">I</button>
+  <button class="border border-black dark:border-gray-400 text-black dark:text-white">H</button>
   <Dropdown>
     <DropdownItem data-command="H1" on:click={executeCommand}>Heading 1</DropdownItem>
     <DropdownItem data-command="H2" on:click={executeCommand}>Heading 2</DropdownItem>
@@ -112,16 +112,16 @@
     <DropdownItem data-command="H5" on:click={executeCommand}>Heading 5</DropdownItem>
     <DropdownItem data-command="H6" on:click={executeCommand}>Heading 6</DropdownItem>
   </Dropdown>
-  <button data-command="Link" onclick={executeCommand}>
+  <button data-command="Link" onclick={executeCommand} class="border border-black dark:border-gray-400 text-black dark:text-white">
     <LinkOutline class="w-4 h-6" />
   </button>
-  <button data-command="Image" onclick={executeCommand}>
+  <button data-command="Image" onclick={executeCommand} class="border border-black dark:border-gray-400 text-black dark:text-white">
     <ImageSolid class="w-4 h-6" />
   </button>
-  <button data-command="Code" onclick={executeCommand}>
+  <button data-command="Code" onclick={executeCommand} class="border border-black dark:border-gray-400 text-black dark:text-white">
     <FileCodeOutline class="w-4 h-6" />
   </button>
-  <button data-command="Quote" onclick={executeCommand}>
+  <button data-command="Quote" onclick={executeCommand} class="border border-black dark:border-gray-400 text-black dark:text-white">
     <QuoteSolid class="w-4 h-6" />
   </button>
 </div>
@@ -129,17 +129,8 @@
 <style>
   button {
     margin-right: 5px;
-    border: 1px solid #ccc;
     padding: 5px 10px;
     border-radius: 4px;
     vertical-align: middle;
-  }
-
-  button[data-command='Bold'] {
-    font-weight: bold;
-  }
-
-  button[data-command='Italic'] {
-    font-style: italic;
   }
 </style>

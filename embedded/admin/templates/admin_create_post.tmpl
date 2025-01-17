@@ -1,9 +1,9 @@
 {{ template "admin_header" . }}
 {{ template "media_selector" . }}
-<div class="admin-page">
-    <div class="page-header">
-        <h1 class="text-4xl text-bold mb-4">Create New Post</h1>
-        <a href="/admin/posts" class="btn">← Back to Posts</a>
+<div class="p-4">
+    <div class="mb-8">
+        <h1 class="text-4xl text-bold mb-4 text-gray-900 dark:text-gray-400">Create New Post</h1>
+        <a href="/admin/posts" class="text-gray-900 dark:text-gray-400">← Back to Posts</a>
     </div>
 
     {{ if .error }}
