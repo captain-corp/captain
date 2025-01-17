@@ -1,10 +1,10 @@
 {{ template "admin_header" . }}
-<div>
+<div class="min-h-96">
     <h1 class="text-4xl text-bold mb-4">Dashboard</h1>
 
     <div class="grid grid-cols-1 gap-8 p-4 lg:grid-cols-2 xl:grid-cols-4">
         <!-- Posts card -->
-        <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-md border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <div>
                 <h6 class="text-xs font-medium leading-none tracking-wider text-gray-500 uppercase dark:text-gray-400">
                     Posts
@@ -21,7 +21,7 @@
         </div>
 
         <!-- Pages card -->
-        <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-md border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <div>
                 <h6 class="text-xs font-medium leading-none tracking-wider text-gray-500 uppercase dark:text-gray-400">
                     Pages
@@ -38,7 +38,7 @@
         </div>
 
         <!-- Users card -->
-        <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-md border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <div>
                 <h6 class="text-xs font-medium leading-none tracking-wider text-gray-500 uppercase dark:text-gray-400">
                     Users
@@ -55,7 +55,7 @@
         </div>
 
         <!-- Tags card -->
-        <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-md border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <div class="flex items-center justify-between p-4 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <div>
                 <h6 class="text-xs font-medium leading-none tracking-wider text-gray-500 uppercase dark:text-gray-400">
                     Tags
@@ -72,7 +72,7 @@
             </div>
         </div>
     </div>
-    <div>
+    <div class="mt-8">
         <h2 class="text-2xl mb-4">Recent Posts</h2>
         {{if .recentPosts}}
 
@@ -101,8 +101,15 @@
         </table>
         {{else}}
         <div>
-            <p>You haven't created any posts yet. Start your blogging journey by creating your first post!</p>
-            <a href="/admin/posts/create" class="btn btn-primary">Create Your First Post</a>
+            <p class="text-gray-500 dark:text-gray-400 text-center">
+                You haven't created any posts yet. Start your blogging journey by creating your first post!
+                <a href="/admin/posts/create" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                    Create Your First Post
+                    <svg class="w-4 h-4 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                    </svg>
+                </a>
+            </p>
         </div>
         {{end}}
     </div>
