@@ -6,10 +6,6 @@
         <a href="/admin/posts" class="btn-secondary">← Back to Posts</a>
     </div>
 
-    {{ if .error }}
-        <div class="error-message">{{ .error }}</div>
-    {{ end }}
-
     <div class="editor-container">
           <div x-inity="posts"></div>
     </div>

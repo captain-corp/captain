@@ -19,15 +19,15 @@ body {
   /* Buttons */
 
   .btn-primary {
-    @apply inline-flex items-center text-sm text-white dark:text-white border border-indigo-700 bg-indigo-600 hover:text-indigo-100 hover:bg-indigo-700 px-4 py-2 rounded;
+    @apply inline-flex items-center text-sm text-white dark:text-white border border-indigo-700 bg-indigo-600 hover:text-indigo-100 hover:bg-indigo-700 px-4 py-2 rounded gap-1;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center text-sm text-gray-600 dark:text-gray-400 border border-gray-900 hover:bg-gray-500 hover:text-white px-4 py-2 rounded;
+    @apply inline-flex items-center text-sm text-gray-600 dark:text-gray-400 border border-gray-900 hover:bg-gray-500 hover:text-white px-4 py-2 rounded gap-1;
   }
 
   .btn-danger {
-    @apply inline-flex items-center text-sm text-red-600 dark:text-red-400 border border-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded;
+    @apply inline-flex items-center text-sm text-red-600 dark:text-red-400 border border-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded gap-1;
   }
 
   .link-primary {
