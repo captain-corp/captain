@@ -1,16 +1,23 @@
 {{ template "admin_header" . }}
 {{ template "media_selector" . }}
-<div class="admin-page">
-    <div class="page-header">
-        <h1 class="text-4xl text-bold mb-4">Edit Post</h1>
-        <div class="header-actions">
-            <a href="/admin/posts" class="btn">← Back to Posts</a>
-            <a href="/posts/{{.post.Slug}}" class="btn" target="_blank">View Post</a>
+<div class="p-4">
+    <div class="mb-8">
+        <h1 class="title">Edit Post</h1>
+        <div>
+            <a href="/admin/posts" class="btn-secondary">← Back to Posts</a>
+            <a href="/posts/{{.post.Slug}}" class="btn-secondary" target="_blank">
+                View Post
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+
+            </a>
         </div>
     </div>
 
     {{ if .error }}
-    <div class="error-message">{{ .error }}</div>
+        <div class="error-message">{{ .error }}</div>
     {{ end }}
 
     <div class="editor-container">
