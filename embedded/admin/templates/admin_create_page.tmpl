@@ -1,14 +1,13 @@
 {{ template "admin_header" . }}
 {{ template "media_selector" . }}
-<div class="p-4">
-    <div class="mb-8">
-        <h1 class="title">Create New Page</h1>
-        <a href="/admin/pages" class="btn-secondary">← Back to Pages</a>
-    </div>
 
-    <div class="editor-container">
-        <div x-inity="pages"></div>
-    </div>
+<div class="mb-8">
+    <h1 class="title">Create New Page</h1>
+    <a href="/admin/pages" class="btn-secondary">← Back to Pages</a>
+</div>
+
+<div class="editor-container">
+    <div x-inity="pages"></div>
 </div>
 
 {{ template "admin_footer" . }}

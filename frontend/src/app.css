@@ -92,7 +92,7 @@ body {
   }
 
   .confirm-delete h3 {
-    @apply mb-4 text-gray-700 dark:text-gray-400 text-lg;
+    @apply mb-4 text-gray-700 dark:text-gray-400 text-2xl font-semibold;
   }
 
   .confirm-delete p {
@@ -102,6 +102,25 @@ body {
   .confirm-delete .actions {
     @apply space-x-2;
   }
+}
+
+
+.form-group {
+  @apply mb-4;
+}
+
+.form-group label {
+  @apply block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300;
+}
+
+.form-group input,
+.form-group textarea {
+  @apply block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white rounded focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  @apply border-indigo-500;
 }
 
 /* Flash messages */
