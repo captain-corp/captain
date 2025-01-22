@@ -1,41 +1,49 @@
 {{ template "admin_header" . }}
-<div class="admin-page">
-    <div class="page-header">
-        <h1 class="text-4xl text-bold mb-4">Posts</h1>
-        <a href="/admin/posts/create" class="btn btn-primary">Create New Post</a>
+<div>
+    <h1 class="text-4xl text-bold mb-4 text-gray-900 dark:text-gray-400">Posts</h1>
+
+    {{ if .posts }}
+    <div class="mb-8 cursor-pointer">
+        <a href="/admin/posts/create" class="inline-flex items-center text-gray-600 dark:text-gray-400 border border-slate-300 hover:bg-slate-600 hover:text-white px-4 py-2 rounded">
+            Create New Post
+            <svg class="w-4 h-4 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+            </svg>
+        </a>
     </div>
+    {{ end }}
 
     <div class="table-container">
         {{if .posts}}
-        <table class="admin-table">
-            <thead>
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Published</th>
-                    <th>Visible</th>
-                    <th>Tags</th>
-                    <th>Actions</th>
+                <th scope="col" class="px-6 py-3">Title</th>
+                    <th scope="col" class="px-6 py-3">Author</th>
+                    <th scope="col" class="px-6 py-3">Published</th>
+                    <th scope="col" class="px-6 py-3">Visible</th>
+                    <th scope="col" class="px-6 py-3">Tags</th>
+                    <th scope="col" class="px-6 py-3">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {{range .posts}}
-                <tr>
-                    <td>{{.Title}}</td>
-                    <td>{{if .Author}}{{.Author.FirstName}} {{.Author.LastName}}{{else}}<em>Deleted User</em>{{end}}</td>
-                    <td x-dynamic-date="{{.PublishedAtUTC}}" x-dynamic-date-timezone="{{.PublishedAtTimeZoneOffset}}">
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td class="px-6 py-4">{{.Title}}</td>
+                    <td class="px-6 py-4">{{if .Author}}{{.Author.FirstName}} {{.Author.LastName}}{{else}}<em>Deleted User</em>{{end}}</td>
+                    <td x-dynamic-date="{{.PublishedAtUTC}}" x-dynamic-date-timezone="{{.PublishedAtTimeZoneOffset}}" class="px-6 py-4">
                         {{.PublishedAt.Format "2006-01-02 15:04"}}
                     </td>
-                    <td>{{if .Visible}}Yes{{else}}No{{end}}</td>
-                    <td class="tags">
+                    <td class="px-6 py-4">{{if .Visible}}Yes{{else}}No{{end}}</td>
+                    <td class="tags px-6 py-4">
                         {{range .Tags}}
-                        <span class="tag">{{.Name}}</span>
+                        <span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">{{.Name}}</span>
                         {{end}}
                     </td>
-                    <td class="actions">
-                        <a href="/admin/posts/{{.ID}}/edit" class="btn btn-edit">Edit</a>
-                        <a href="/admin/posts/{{.ID}}/delete" class="btn btn-delete">Delete</a>
-                        <a href="/posts/{{.Slug}}" class="btn btn-view" target="_blank">View</a>
+                    <td class="actions px-6 py-4">
+                        <a href="/admin/posts/{{.ID}}/edit" class="border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 rounded">Edit</a>
+                        <a href="/admin/posts/{{.ID}}/delete" class="border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded">Delete</a>
+                        <a href="/posts/{{.Slug}}" class="border border-green-500 text-green-500 hover:bg-green-500 hover:text-white px-4 py-2 rounded" target="_blank">View</a>
                     </td>
                 </tr>
                 {{end}}
@@ -44,7 +52,12 @@
         {{else}}
         <div class="empty-state">
             <p>No posts found. Start writing your first blog post!</p>
-            <a href="/admin/posts/create" class="btn btn-primary">Create Post</a>
+            <a href="/admin/posts/create" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                Create Your First Post
+                <svg class="w-4 h-4 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                </svg>
+            </a>
         </div>
         {{end}}
     </div>
