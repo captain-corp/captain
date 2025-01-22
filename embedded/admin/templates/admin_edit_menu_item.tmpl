@@ -1,14 +1,14 @@
 {{ template "admin_header" . }}
-<div class="admin-page">
-    <div class="page-header">
-        <h1>Edit Menu Item</h1>
+<div class="p-4">
+    <div class="mb-8">
+        <h1 class="title">Edit Menu Item</h1>
         <div class="header-actions">
-            <a href="/admin/menus" class="btn">← Back to Menu Items</a>
+            <a href="/admin/menus" class="btn-secondary">← Back to Menu Items</a>
         </div>
     </div>
 
     {{if .error}}
-    <div class="error-message">{{.error}}</div>
+        <div class="error-message">{{.error}}</div>
     {{end}}
 
     <div class="editor-container">
@@ -48,8 +48,8 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Update Menu Item</button>
-                <a href="/admin/menus" class="btn">Cancel</a>
+                <button type="submit" class="btn-primary">Update Menu Item</button>
+                <a href="/admin/menus" class="btn-secondary">Cancel</a>
             </div>
         </form>
     </div>

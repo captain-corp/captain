@@ -1,13 +1,11 @@
 {{ template "admin_header" . }}
-<div class="admin-page">
-    <h1>Confirm Delete Tag</h1>
-    <div class="confirm-delete">
-        <p>Are you sure you want to delete the tag "{{.tag.Name}}"?</p>
-        <p>This action cannot be undone.</p>
-        <div class="actions">
-            <button onclick="deleteTag({{.tag.ID}})" class="btn btn-delete">Delete</button>
-            <a href="/admin/tags" class="btn">Cancel</a>
-        </div>
+<h1 class="title">Confirm Delete Tag</h1>
+<div class="confirm-delete">
+    <h3>Are you sure you want to delete the tag "{{.tag.Name}}"?</h3>
+    <p>This action cannot be undone.</p>
+    <div class="actions">
+        <button onclick="deleteTag({{.tag.ID}})" class="btn-danger">Delete</button>
+        <a href="/admin/tags" class="btn-secondary">Cancel</a>
     </div>
 </div>
 {{ template "admin_footer" . }}

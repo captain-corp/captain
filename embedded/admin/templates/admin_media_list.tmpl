@@ -1,51 +1,53 @@
 {{ template "admin_header" . }}
 
-<div class="admin-page">
-    <div class="page-header">
-        <h1>Media Library</h1>
-        <div class="actions">
-            <a href="/admin/media/upload" class="btn btn-primary">Upload Media</a>
-        </div>
-    </div>
+<div class="mb-8">
+    <h1 class="title">Media Library</h1>
+    <a href="/admin/media/upload" class="btn-primary">Upload Media</a>
+</div>
 
-    {{ if not .media }}
-        <div class="empty-state">
-            <i class="fas fa-images"></i>
-            <h2>No Media Files Yet</h2>
-            <p>Upload your first media file to get started.</p>
-            <a href="/admin/media/upload" class="btn btn-primary">Upload Media</a>
+{{ if not .media }}
+    <div class="empty-state">
+        <p>No media files found. Upload your first media file to get started.</p>
+        <a href="/admin/media/upload" class="link-primary">
+            Upload Media
+            <svg class="w-4 h-4 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+            </svg>
+        </a>
+    </div>
+{{ else }}
+<div class="media-grid">
+    {{ range .media }}
+    <div class="media-item">
+        {{ if eq (slice .MimeType 0 5) "image" }}
+        <div class="media-preview">
+            <img src="/media/{{ .Path }}" alt="{{ .Name }}">
         </div>
-    {{ else }}
-    <div class="media-grid">
-        {{ range .media }}
-        <div class="media-item">
-            {{ if eq (slice .MimeType 0 5) "image" }}
-            <div class="media-preview">
-                <img src="/media/{{ .Path }}" alt="{{ .Name }}">
-            </div>
-            {{ else }}
-            <div class="media-preview file">
-                <i class="fas fa-file"></i>
-            </div>
-            {{ end }}
-            <div class="media-info">
-                <h3>{{ .Name }}</h3>
-                <p class="size">{{ .Size | formatSize }}</p>
-                {{ if .Description }}
-                <p class="description">{{ .Description }}</p>
-                {{ end }}
-                <div class="actions">
-                    <button onclick="copyMediaTag('{{ .GetMarkdownTag }}')" class="btn btn-small">
-                        Copy Markdown
-                    </button>
-                    <a href="/admin/media/{{ .ID }}/delete" class="btn btn-small btn-delete">Delete</a>
-                </div>
-            </div>
+        {{ else }}
+        <div class="media-preview file">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+            </svg>
+
         </div>
         {{ end }}
+        <div class="media-info">
+            <h3>{{ .Name }}</h3>
+            <p class="size">{{ .Size | formatSize }}</p>
+            {{ if .Description }}
+            <p class="description">{{ .Description }}</p>
+            {{ end }}
+            <div class="actions">
+                <button onclick="copyMediaTag('{{ .GetMarkdownTag }}')" class="btn-small">
+                    Copy Markdown
+                </button>
+                <a href="/admin/media/{{ .ID }}/delete" class="btn-delete">Delete</a>
+            </div>
+        </div>
     </div>
     {{ end }}
 </div>
+{{ end }}
 
 <script>
 function copyMediaTag(tag) {

@@ -131,20 +131,14 @@ func (h *AdminHandlers) ShowEditPost(c *fiber.Ctx) error {
 
 	if err != nil {
 		flash.Error(c, "Invalid post ID")
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"error":    "Invalid post ID",
-			"redirect": "/admin/posts",
-		})
+		return c.Status(http.StatusBadRequest).Render("admin_400", fiber.Map{})
 	}
 
 	post, err = h.repos.Posts.FindByID(id)
 
 	if err != nil {
 		flash.Error(c, "Post not found")
-		return c.Status(http.StatusNotFound).JSON(fiber.Map{
-			"error":    "Post not found",
-			"redirect": "/admin/posts",
-		})
+		return c.Status(http.StatusNotFound).Render("admin_404", fiber.Map{})
 	}
 
 	return c.Render("admin_edit_post", fiber.Map{
