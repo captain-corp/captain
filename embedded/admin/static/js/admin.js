@@ -420,7 +420,7 @@ function initializeDarkModeToggle() {
                 }
             } else {
                 error(json.error);
-                document.querySelector('.editor-container').scrollIntoView()
+                document.querySelector('.app-container').scrollIntoView()
             }
         }
     });
@@ -430,11 +430,12 @@ function initializeDarkModeToggle() {
             let method = 'POST';
             let url = '/admin/api/pages';
 
+            done('saving');
+
             if (props.id) {
                 method = 'PUT';
                 url = url + '/' + props.id;
             }
-            done('saving');
 
             const resp = await fetch(url, {
                 method,
@@ -452,7 +453,35 @@ function initializeDarkModeToggle() {
                 }
             } else {
                 error(json.error);
-                document.querySelector('.editor-container').scrollIntoView()
+                document.querySelector('.app-container').scrollIntoView()
+            }
+        }
+    });
+
+    Inity.register('settings', Apps.Settings, {
+        onSubmit: async (data, done, error, props) => {
+            let method = 'POST';
+            let url = '/admin/api/settings';
+
+            if (props.id) {
+                method = 'PUT';
+            }
+
+            done('saving');
+
+            const resp = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (resp.ok) {
+                done('saved');
+            } else {
+                error(json.error);
+                document.querySelector('.app-container').scrollIntoView()
             }
         }
     });

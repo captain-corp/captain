@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Alert, Input, Label, Textarea, Toggle, Select } from 'flowbite-svelte';
+  import { Alert, Input, Label, Toggle, Select } from 'flowbite-svelte';
 
   import { type Pages } from '../utils/types/pages';
   import { slugify } from '../utils/text';

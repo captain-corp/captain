@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/captain-corp/captain/flash"
@@ -296,4 +297,66 @@ func (h *AdminHandlers) ApiGetTags(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(response)
+}
+
+// UpdateSettings handles the POST /admin/settings route
+func (h *AdminHandlers) UpdateSettings(c *fiber.Ctx) error {
+	form, _ := h.repos.Settings.Get()
+	var errors []string
+
+	// Get form values
+	form.Title = c.FormValue("title")
+	form.Subtitle = c.FormValue("subtitle")
+	form.ChromaStyle = c.FormValue("chroma_style")
+	postsPerPage := c.FormValue("posts_per_page")
+	logoID := c.FormValue("logo_id")
+	useFavicon := c.FormValue("use_favicon") == "on"
+
+	// Validate required fields
+	if form.Title == "" {
+		errors = append(errors, "Title is required")
+	}
+	if form.Subtitle == "" {
+		errors = append(errors, "Subtitle is required")
+	}
+
+	// Parse posts per page
+	if pp, err := strconv.Atoi(postsPerPage); err == nil {
+		form.PostsPerPage = pp
+	} else {
+		errors = append(errors, "Posts per page must be a number")
+	}
+
+	// Handle logo
+	if logoID != "" {
+		if id, err := strconv.ParseUint(logoID, 10, 32); err == nil {
+			uid := uint(id)
+			form.LogoID = &uid
+		}
+	} else {
+		form.LogoID = nil
+	}
+	form.UseFavicon = useFavicon
+
+	if len(errors) > 0 {
+		return c.JSON(fiber.Map{"errors": errors})
+	}
+
+	if err := h.repos.Settings.Update(form); err != nil {
+		return c.JSON(fiber.Map{"errors": []string{"Failed to save settings"}})
+	}
+
+	// Generate favicons if enabled and logo is set
+	if form.UseFavicon && form.LogoID != nil {
+		logo, err := h.repos.Media.FindByID(*form.LogoID)
+		if err != nil {
+			return c.JSON(fiber.Map{"errors": []string{fmt.Sprintf("failed to get logo: %w", err)}})
+		}
+
+		if err := GenerateFavicons(h.repos, logo, h.storage); err != nil {
+			return c.JSON(fiber.Map{"errors": []string{"Failed to generate favicons"}})
+		}
+	}
+
+	return c.Redirect("/admin/settings")
 }

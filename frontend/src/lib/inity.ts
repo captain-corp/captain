@@ -24,15 +24,16 @@ export const Inity = {
 
       elements.forEach((element) => {
         let props: any = {};
-        let elementProps: string = element.getAttribute('x-props');
+        let elementPropsText: string = element.textContent || '';
 
-        if (elementProps) {
+        if (elementPropsText) {
           try {
-            props = JSON.parse(elementProps);
+            props = JSON.parse(elementPropsText);
+            element.textContent = '';
           } catch (e) {
             console.group('Inity');
-            console.warn('Could not parse x-props attribute for element', element);
-            console.warn('Props', elementProps);
+            console.warn('Could not parse attribute for element', element);
+            console.warn('Props', elementPropsText);
             console.warn('Error', e);
             console.groupEnd();
           }

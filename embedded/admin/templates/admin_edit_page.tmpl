@@ -15,9 +15,8 @@
         </div>
     </div>
 
-    <div class="editor-container">
-        <div x-inity="pages" x-props='{{ .page.ToJSON }}'></div>
+    <div class="app-container">
+        <div x-inity="pages">{{ .page.ToJSON }}</div>
     </div>
 </div>
-
 {{ template "admin_footer" . }}
