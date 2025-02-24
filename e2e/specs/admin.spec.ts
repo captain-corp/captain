@@ -181,14 +181,10 @@ test.describe('Admin Panel E2E Tests', () => {
 
             await page.fill('input[name="title"]', 'Updated Title');
             await page.fill('input[name="subtitle"]', 'Updated Subtitle');
-            await page.selectOption('select[name="theme"]', 'dark');
-            await page.fill('input[name="posts_per_page"]', '1');
+            await page.fill('input[name="posts-per-page"]', '1');
 
-            const settingsSaveResponse = page.waitForResponse('**/admin/settings');
-            await page.click('button:has-text("Save Settings")');
-
-            const response = await settingsSaveResponse;
-            await expect(response.status()).toBe(302);
+            await page.click('button:has-text("Save")');
+            await expect(page.locator('button:has-text("Saved")')).toBeVisible();
 
             // Verify post time updated
             await page.goto('/admin/posts');

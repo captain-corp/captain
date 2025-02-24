@@ -52,14 +52,15 @@
       {
         title,
         subtitle,
-        logoUrl,
         useLogoAsFavicon,
         codeHighlightTheme,
-        codeThemeOptions,
         postsPerPage,
       },
       (newSavingState: string) => {
         savingState = newSavingState;
+        if (savingState === 'saved') {
+          message = 'Settings saved';
+        }
       },
       (newError: string) => {
         error = newError;
@@ -90,6 +91,7 @@
         onDelete={() => {
           deleteLogoHandler();
           deleteLogo();
+          useLogoAsFavicon = false;
         }}
       />
     {:else}
@@ -97,12 +99,11 @@
         accept="image/*"
         onFilesSelectedHandler={(files, uploadStarted, uploadFinished) => {
           uploadLogoHandler(files, uploadStarted, (error, url) => {
-            console.log(error);
-            console.log(url);
             if (error) {
               error = error;
             } else {
               setLogo(url);
+              message = 'Upload successful!';
             }
             uploadFinished(error, url);
           });

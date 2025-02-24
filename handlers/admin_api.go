@@ -6,7 +6,6 @@ import (
 	"mime"
 	"net/http"
 	"path/filepath"
-	"strconv"
 	"time"
 
 	"github.com/captain-corp/captain/flash"
@@ -38,6 +37,14 @@ type pageRequest struct {
 	Content     string `json:"content"`
 	ContentType string `json:"contentType"`
 	Visible     bool   `json:"visible"`
+}
+
+type settingsRequest struct {
+	CodeHighlightTheme string `json:"codeHighlightTheme"`
+	PostsPerPage       int    `json:"postsPerPage"`
+	Title              string `json:"title"`
+	Subtitle           string `json:"subtitle"`
+	UseLogoAsFavicon   bool   `json:"useLogoAsFavicon"`
 }
 
 type publishedTime struct {
@@ -302,66 +309,47 @@ func (h *AdminHandlers) ApiGetTags(c *fiber.Ctx) error {
 	return c.JSON(response)
 }
 
-// UpdateSettings handles the POST /admin/settings route
-func (h *AdminHandlers) UpdateSettings(c *fiber.Ctx) error {
-	form, _ := h.repos.Settings.Get()
-	var errors []string
+// ApiUpdateSettings handles the POST /api/settings route
+func (h *AdminHandlers) ApiUpdateSettings(c *fiber.Ctx) error {
+	var logo *models.Media
+	settings, _ := h.repos.Settings.Get()
+	settingsPost := new(settingsRequest)
 
-	// Get form values
-	form.Title = c.FormValue("title")
-	form.Subtitle = c.FormValue("subtitle")
-	form.ChromaStyle = c.FormValue("chroma_style")
-	postsPerPage := c.FormValue("posts_per_page")
-	logoID := c.FormValue("logo_id")
-	useFavicon := c.FormValue("use_favicon") == "on"
-
-	// Validate required fields
-	if form.Title == "" {
-		errors = append(errors, "Title is required")
-	}
-	if form.Subtitle == "" {
-		errors = append(errors, "Subtitle is required")
+	if err := c.BodyParser(settingsPost); err != nil {
+		// TODO: Log error
+		fmt.Printf("Failed to parse request body: %v\n", err)
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
 	}
 
-	// Parse posts per page
-	if pp, err := strconv.Atoi(postsPerPage); err == nil {
-		form.PostsPerPage = pp
-	} else {
-		errors = append(errors, "Posts per page must be a number")
-	}
+	settings.Title = settingsPost.Title
+	settings.Subtitle = settingsPost.Subtitle
+	settings.ChromaStyle = settingsPost.CodeHighlightTheme
+	settings.PostsPerPage = settingsPost.PostsPerPage
+	settings.UseLogoAsFavicon = settingsPost.UseLogoAsFavicon
 
-	// Handle logo
-	if logoID != "" {
-		if id, err := strconv.ParseUint(logoID, 10, 32); err == nil {
-			uid := uint(id)
-			form.LogoID = &uid
-		}
-	} else {
-		form.LogoID = nil
-	}
-	form.UseFavicon = useFavicon
-
-	if len(errors) > 0 {
-		return c.JSON(fiber.Map{"errors": errors})
-	}
-
-	if err := h.repos.Settings.Update(form); err != nil {
-		return c.JSON(fiber.Map{"errors": []string{"Failed to save settings"}})
-	}
-
-	// Generate favicons if enabled and logo is set
-	if form.UseFavicon && form.LogoID != nil {
-		logo, err := h.repos.Media.FindByID(*form.LogoID)
+	if settings.LogoID != nil {
+		media, err := h.repos.Media.FindByID(*settings.LogoID)
 		if err != nil {
-			return c.JSON(fiber.Map{"errors": []string{fmt.Sprintf("failed to get logo: %w", err)}})
+			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to find logo"})
 		}
+		logo = media
+	} else {
+		settings.UseLogoAsFavicon = false
+	}
 
+	if err := h.repos.Settings.Update(settings); err != nil {
+		// TODO: Log error
+		fmt.Printf("Failed to update settings: %v\n", err)
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to update settings"})
+	}
+
+	if settingsPost.UseLogoAsFavicon && logo != nil {
 		if err := GenerateFavicons(h.repos, logo, h.storage); err != nil {
-			return c.JSON(fiber.Map{"errors": []string{"Failed to generate favicons"}})
+			log.Printf("Warning: favicon generation failed: %v", err)
 		}
 	}
 
-	return c.Redirect("/admin/settings")
+	return c.JSON(fiber.Map{"success": true})
 }
 
 // ApiUploadLogo handles logo upload and favicon generation
@@ -410,11 +398,6 @@ func (h *AdminHandlers) ApiUploadLogo(c *fiber.Ctx) error {
 		})
 	}
 
-	// Generate favicon (implement your favicon generation logic here)
-	if err := GenerateFavicons(h.repos, media, h.storage); err != nil {
-		log.Printf("Warning: favicon generation failed: %v", err)
-	}
-
 	return c.JSON(fiber.Map{
 		"message": "Logo uploaded successfully",
 		"logoUrl": media.Path,
@@ -446,7 +429,7 @@ func (h *AdminHandlers) ApiDeleteLogo(c *fiber.Ctx) error {
 
 	// Clear logo ID and favicon setting
 	settings.LogoID = nil
-	settings.UseFavicon = false
+	settings.UseLogoAsFavicon = false
 	if err := h.repos.Settings.Update(settings); err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Failed to update settings",

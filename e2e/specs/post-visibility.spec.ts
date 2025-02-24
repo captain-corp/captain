@@ -37,12 +37,9 @@ test.describe('Post Visibility', () => {
     // Go to settings page
     await page.goto('/admin/settings');
     // Set page per page to 50
-    await page.fill('input[name="posts_per_page"]', '50');
-    const settingsSaveResponse = page.waitForResponse('**/admin/settings');
-    await page.click('button:has-text("Save Settings")');
-
-    const response = await settingsSaveResponse;
-    await expect(response.status()).toBe(302);
+    await page.fill('input[name="posts-per-page"]', '50');
+    await page.click('button:has-text("Save")');
+    await expect(page.locator('button:has-text("Saved")')).toBeVisible();
 
     // Verify posts are visible and properly marked when logged in
     await page.goto('/');

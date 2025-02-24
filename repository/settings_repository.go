@@ -27,7 +27,6 @@ func (r *settingsRepository) Get() (*models.Settings, error) {
 			Title:        system.DefaultTitle,
 			Subtitle:     system.DefaultSubtitle,
 			ChromaStyle:  system.DefaultChromaStyle,
-			Theme:        system.DefaultTheme,
 			PostsPerPage: system.DefaultPostsPerPage,
 		}
 		if err := r.Create(settings); err != nil {

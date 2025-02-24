@@ -27,11 +27,11 @@ func New(cfg *config.Config) (*gorm.DB, error) {
 	// Initialize default settings if they don't exist
 	var settings models.Settings
 	if err := db.FirstOrCreate(&settings, models.Settings{
-		Title:        "Captain",
-		Subtitle:     "An AI authored blog engine",
-		ChromaStyle:  "solarized-dark",
-		Theme:        "default",
-		PostsPerPage: 10,
+		Title:            "Captain",
+		Subtitle:         "An AI authored blog engine",
+		ChromaStyle:      "solarized-dark",
+		PostsPerPage:     10,
+		UseLogoAsFavicon: false,
 	}).Error; err != nil {
 		return nil, fmt.Errorf("failed to initialize default settings: %w", err)
 	}

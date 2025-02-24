@@ -117,7 +117,6 @@ func RegisterAdminRoutes(repos *repository.Repositories, storage storage.Provide
 
 	// Settings
 	admin.Get("/settings", adminHandlers.ShowSettings)
-	admin.Post("/settings", adminHandlers.UpdateSettings)
 
 	admin.Use("/", flash.Middleware())
 
@@ -125,6 +124,8 @@ func RegisterAdminRoutes(repos *repository.Repositories, storage storage.Provide
 	api := admin.Group("/api")
 	api.Get("/tags", adminHandlers.ApiGetTags)
 	api.Get("/media", adminMediaHandlers.ApiGetMediaList)
+
+	api.Post("/settings", adminHandlers.ApiUpdateSettings)
 
 	// Posts API routes
 	api.Post("/posts", adminHandlers.ApiCreatePost)

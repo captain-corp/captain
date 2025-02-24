@@ -10,13 +10,12 @@ import (
 // Settings represents the site configuration
 type Settings struct {
 	gorm.Model
-	Title        string `gorm:"not null" form:"title"`
-	Subtitle     string `gorm:"not null" form:"subtitle"`
-	ChromaStyle  string `gorm:"not null" form:"chroma_style"`
-	Theme        string `gorm:"not null" form:"theme"`
-	PostsPerPage int    `gorm:"not null" form:"posts_per_page"`
-	LogoID       *uint  `gorm:"" form:"logo_id"`
-	UseFavicon   bool   `gorm:"not null;default:false" form:"use_favicon"`
+	Title            string `gorm:"not null" form:"title"`
+	Subtitle         string `gorm:"not null" form:"subtitle"`
+	ChromaStyle      string `gorm:"not null" form:"chroma_style"`
+	PostsPerPage     int    `gorm:"not null" form:"posts_per_page"`
+	LogoID           *uint  `gorm:"" form:"logo_id"`
+	UseLogoAsFavicon bool   `gorm:"not null;default:false" form:"use_favicon"`
 }
 
 func (s *Settings) ToJSON() string {
@@ -34,9 +33,8 @@ func (s *Settings) ToJSON() string {
 		"subtitle":           s.Subtitle,
 		"codeHighlightTheme": s.ChromaStyle,
 		"codeThemeOptions":   chromaStyleList,
-		"theme":              s.Theme,
 		"postsPerPage":       s.PostsPerPage,
-		"useFavicon":         s.UseFavicon,
+		"useLogoAsFavicon":   s.UseLogoAsFavicon,
 	})
 	return string(b)
 }
