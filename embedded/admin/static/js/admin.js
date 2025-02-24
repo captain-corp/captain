@@ -477,13 +477,46 @@ function initializeDarkModeToggle() {
                 body: JSON.stringify(data),
             });
 
+            const json = await resp.json();
+
             if (resp.ok) {
                 done('saved');
             } else {
                 error(json.error);
                 document.querySelector('.app-container').scrollIntoView()
             }
-        }
+        }, 
+        uploadLogoHandler: async (files, uploadStarted, uploadFinished) => {
+            const data = new FormData();
+            data.append('logo', files[0]);
+            data.append('filename', files[0].name);
+            console.log(files[0]);
+
+            const resp = await fetch('/admin/api/logo', {
+                method: 'POST',
+                body: data,
+            });
+
+            if (resp.ok) {
+                const json = await resp.json();
+                uploadFinished(null, '/media/' + json.logoUrl);
+            } else {
+                uploadFinished(json.error, null);
+            }
+            uploadStarted();
+        },
+        deleteLogoHandler: async () => {
+            const resp = await fetch('/admin/api/logo', {
+                method: 'DELETE',
+            });
+
+            if (resp.ok) {
+                const json = await resp.json();
+                console.log(json);
+            } else {
+                console.error('Error:', error);
+            }
+        },
     });
 
     document.addEventListener("DOMContentLoaded", () => Inity.attach());

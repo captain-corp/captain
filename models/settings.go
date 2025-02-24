@@ -36,7 +36,6 @@ func (s *Settings) ToJSON() string {
 		"codeThemeOptions":   chromaStyleList,
 		"theme":              s.Theme,
 		"postsPerPage":       s.PostsPerPage,
-		"logoId":             s.LogoID,
 		"useFavicon":         s.UseFavicon,
 	})
 	return string(b)

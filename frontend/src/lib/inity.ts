@@ -22,7 +22,7 @@ export const Inity = {
       const elements = document.querySelectorAll(`[x-inity="${name}"]`);
       const { Component } = entry as InityProps;
 
-      elements.forEach((element) => {
+      elements.forEach((element: HTMLElement) => {
         let props: any = {};
         let elementPropsText: string = element.textContent || '';
 
@@ -40,6 +40,7 @@ export const Inity = {
         }
 
         Object.assign(props, this.data[name].props);
+        Object.assign(props, element.dataset);
 
         for (const [key, value] of Object.entries(this.data[name].props)) {
           if (value instanceof Function) {
@@ -49,6 +50,8 @@ export const Inity = {
             props[key] = wrapper;
           }
         }
+
+        console.log(props);
 
         mount(Component, { target: element, props });
       });

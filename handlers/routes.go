@@ -134,5 +134,9 @@ func RegisterAdminRoutes(repos *repository.Repositories, storage storage.Provide
 	api.Post("/pages", adminHandlers.ApiCreatePage)
 	api.Put("/pages/:id", adminHandlers.ApiUpdatePage)
 
+	// logo API routes
+	api.Post("/logo", adminHandlers.ApiUploadLogo)
+	api.Delete("/logo", adminHandlers.ApiDeleteLogo)
+
 	return app
 }
