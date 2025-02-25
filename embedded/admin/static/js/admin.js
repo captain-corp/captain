@@ -490,7 +490,6 @@ function initializeDarkModeToggle() {
             const data = new FormData();
             data.append('logo', files[0]);
             data.append('filename', files[0].name);
-            console.log(files[0]);
 
             const resp = await fetch('/admin/api/logo', {
                 method: 'POST',
@@ -510,11 +509,9 @@ function initializeDarkModeToggle() {
                 method: 'DELETE',
             });
 
-            if (resp.ok) {
+            if (!resp.ok) {
                 const json = await resp.json();
-                console.log(json);
-            } else {
-                console.error('Error:', error);
+                console.error(json.error);
             }
         },
     });

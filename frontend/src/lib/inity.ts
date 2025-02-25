@@ -51,8 +51,6 @@ export const Inity = {
           }
         }
 
-        console.log(props);
-
         mount(Component, { target: element, props });
       });
     }
