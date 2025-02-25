@@ -30,7 +30,7 @@ func InjectFavicon(repositories *repository.Repositories) fiber.Handler {
 
 		settings := c.Locals("settings").(*models.Settings)
 
-		if settings.UseFavicon {
+		if settings.UseLogoAsFavicon {
 			err := c.Bind(fiber.Map{
 				"faviconHTML": generateFaviconHTML(),
 			})
@@ -78,8 +78,6 @@ func ServeFavicon(repositories *repository.Repositories, storage storage.Provide
 
 func readFromStorage(repositories *repository.Repositories, storage storage.Provider, filename string) ([]byte, error) {
 	f, err := repositories.Media.FindByFilename(filename)
-	fmt.Printf("Favicon: %v\n", f)
-	fmt.Printf("Name: %v\n", filename)
 
 	if err != nil {
 		return nil, err

@@ -53,16 +53,22 @@ test-e2e-ui: test-data-cleanup build
 	npx playwright test --ui
 
 # Code quality commands
+frontend-format:
+	cd frontend && $(MAKE) format
+
 frontend-format-check:
 	cd frontend && $(MAKE) format-check
 
 lint:
 	golangci-lint run
 
-fmt: frontend-format-check
+format: frontend-format
 	go fmt ./...
 
-quality: fmt lint test test-e2e
+check-format: frontend-format-check
+	go fmt ./...
+
+quality: check-format lint test test-e2e
 
 # Release commands for each platform
 release-darwin-arm64:

@@ -253,9 +253,19 @@ func (h *AdminHandlers) ConfirmDeleteUser(c *fiber.Ctx) error {
 		return c.Status(http.StatusNotFound).Render("admin_404", fiber.Map{})
 	}
 
+	postCount, err := h.repos.Posts.CountByAuthor(user)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).Render("admin_500", fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	hasContent := postCount > 0
+
 	return c.Render("admin_confirm_delete_user", fiber.Map{
-		"title": "Confirm user deletion",
-		"user":  user,
+		"title":      "Confirm user deletion",
+		"user":       user,
+		"hasContent": hasContent,
 	})
 }
 

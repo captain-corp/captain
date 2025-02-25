@@ -76,6 +76,18 @@ function deleteUser(id) {
         });
 }
 
+function togglePassword(id) {
+    const input = document.getElementById(id);
+    const button = input.nextElementSibling;
+    if (input.type === 'password') {
+        input.type = 'text';
+        button.textContent = 'Hide';
+    } else {
+        input.type = 'password';
+        button.textContent = 'Show';
+    }
+}
+
 
 function initializeMenuItemForm() {
     const pageSelect = document.getElementById('page_id');
@@ -322,6 +334,47 @@ function openLogoMediaSelector() {
     });
 }
 
+function initializeDarkModeToggle() {
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+
+    // Change the icons inside the button based on previous settings
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        themeToggleLightIcon.classList.remove('hidden');
+    } else {
+        themeToggleDarkIcon.classList.remove('hidden');
+    }
+
+    themeToggleBtn.addEventListener('click', function() {
+        // toggle icons inside button
+        themeToggleDarkIcon.classList.toggle('hidden');
+        themeToggleLightIcon.classList.toggle('hidden');
+
+        // if set via local storage previously
+        if (localStorage.getItem('color-theme')) {
+            if (localStorage.getItem('color-theme') === 'light') {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            }
+
+        // if NOT set via local storage previously
+        } else {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        }
+        
+    });
+}
+
 (function () {
 
     document.querySelectorAll('[x-dynamic-date]').forEach((element) => {
@@ -367,7 +420,7 @@ function openLogoMediaSelector() {
                 }
             } else {
                 error(json.error);
-                document.querySelector('.editor-container').scrollIntoView()
+                document.querySelector('.app-container').scrollIntoView()
             }
         }
     });
@@ -377,11 +430,12 @@ function openLogoMediaSelector() {
             let method = 'POST';
             let url = '/admin/api/pages';
 
+            done('saving');
+
             if (props.id) {
                 method = 'PUT';
                 url = url + '/' + props.id;
             }
-            done('saving');
 
             const resp = await fetch(url, {
                 method,
@@ -399,9 +453,67 @@ function openLogoMediaSelector() {
                 }
             } else {
                 error(json.error);
-                document.querySelector('.editor-container').scrollIntoView()
+                document.querySelector('.app-container').scrollIntoView()
             }
         }
+    });
+
+    Inity.register('settings', Apps.Settings, {
+        onSubmit: async (data, done, error, props) => {
+            let method = 'POST';
+            let url = '/admin/api/settings';
+
+            if (props.id) {
+                method = 'PUT';
+            }
+
+            done('saving');
+
+            const resp = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const json = await resp.json();
+
+            if (resp.ok) {
+                done('saved');
+            } else {
+                error(json.error);
+                document.querySelector('.app-container').scrollIntoView()
+            }
+        }, 
+        uploadLogoHandler: async (files, uploadStarted, uploadFinished) => {
+            const data = new FormData();
+            data.append('logo', files[0]);
+            data.append('filename', files[0].name);
+
+            const resp = await fetch('/admin/api/logo', {
+                method: 'POST',
+                body: data,
+            });
+
+            if (resp.ok) {
+                const json = await resp.json();
+                uploadFinished(null, '/media/' + json.logoUrl);
+            } else {
+                uploadFinished(json.error, null);
+            }
+            uploadStarted();
+        },
+        deleteLogoHandler: async () => {
+            const resp = await fetch('/admin/api/logo', {
+                method: 'DELETE',
+            });
+
+            if (!resp.ok) {
+                const json = await resp.json();
+                console.error(json.error);
+            }
+        },
     });
 
     document.addEventListener("DOMContentLoaded", () => Inity.attach());
@@ -412,4 +524,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeMenuItemForm();
     initializeMenuItems();
     initializeMenuToggle();
+    initializeDarkModeToggle();
 });

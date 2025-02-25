@@ -2,30 +2,196 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-  color-scheme: light dark;
-  color: rgba(9, 9, 9, 0.87);
-  background-color: #ffffff;
+@layer components {
+  /* Typography */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  .title {
+    @apply text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-400;
+  }
+
+  /* Buttons */
+
+  .btn-primary {
+    @apply inline-flex items-center text-sm text-white dark:text-white border border-indigo-700 bg-indigo-600 hover:text-indigo-100 hover:bg-indigo-700 px-4 py-2 rounded gap-1;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center text-sm text-gray-600 dark:text-gray-400 border border-gray-900 hover:bg-gray-500 hover:text-white px-4 py-2 rounded gap-1;
+  }
+
+  .btn-secondary[disabled] {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center text-sm text-red-600 dark:text-red-400 border border-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded gap-1;
+  }
+
+  .link-primary {
+    @apply inline-flex items-center font-medium text-indigo-600 dark:text-indigo-500 hover:underline;
+  }
+
+  .link-secondary {
+    @apply inline-flex items-center font-medium text-gray-600 dark:text-gray-400 hover:underline;
+  }
+
+  /* Table */
+
+  .table {
+    @apply w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400;
+  }
+
+  .table thead {
+    @apply text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400;
+  }
+
+  .table thead th,
+  .table tbody td {
+    @apply px-6 py-3;
+  }
+
+  /* Components */
+  .tag {
+    @apply bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-2.5 rounded dark:bg-gray-700 dark:text-gray-300;
+  }
+
+  .empty-state {
+    @apply text-center min-h-40 py-6;
+  }
+
+  .empty-state p {
+    @apply text-gray-500 dark:text-gray-400 mb-4;
+  }
+
+  /* Main menu */
+
+  .main-menu {
+    @apply space-y-2;
+  }
+
+  .main-menu li {
+    @apply flex items-center gap-2 text-gray-700 dark:text-gray-400 px-2 py-1;
+  }
+
+  .main-menu li a {
+    @apply font-medium text-gray-900 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-500;
+  }
+
+  .main-menu li svg {
+    @apply size-6;
+  }
+
+  /* Confirmation message */
+
+  .confirm-delete {
+    @apply max-w-md mx-auto text-center;
+  }
+
+  .confirm-delete h3 {
+    @apply mb-4 text-gray-700 dark:text-gray-400 text-2xl font-semibold;
+  }
+
+  .confirm-delete p {
+    @apply mb-4 text-red-500 dark:text-red-400 italic;
+  }
+
+  .confirm-delete .actions {
+    @apply space-x-2;
+  }
+
+  /* Forms */
+
+  .form-group {
+    @apply mb-4;
+  }
+
+  .form-group label {
+    @apply block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    @apply block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white rounded focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-500 dark:focus:border-indigo-500;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    @apply border-indigo-500;
+  }
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+body {
+  background-color: #f6f6f6;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Flash messages */
+
+.flash-messages {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  max-width: 400px;
+}
+
+.flash-message {
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flash-message .message-text {
+  flex: 1;
+}
+
+.flash-message .dismiss-button {
+  background: none;
+  border: none;
+  color: inherit;
+  opacity: 0.7;
+  cursor: pointer;
+  padding: 0 0 0 10px;
+  font-size: 14px;
+}
+
+.flash-message .dismiss-button:hover {
+  opacity: 1;
+}
+
+.flash-debug {
+  background-color: #e3e3e3;
+  color: #333;
+  border-left: 4px solid #666;
+}
+
+.flash-info {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  border-left: 4px solid #2196f3;
+}
+
+.flash-success {
+  background-color: #e8f5e9;
+  color: #1b5e20;
+  border-left: 4px solid #4caf50;
+}
+
+.flash-warning {
+  background-color: #fff3e0;
+  color: #e65100;
+  border-left: 4px solid #ff9800;
+}
+
+.flash-error {
+  background-color: #ffebee;
+  color: #b71c1c;
+  border-left: 4px solid #f44336;
 }

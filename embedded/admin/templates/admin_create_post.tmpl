@@ -1,17 +1,11 @@
 {{ template "admin_header" . }}
 {{ template "media_selector" . }}
-<div class="admin-page">
-    <div class="page-header">
-        <h1 class="text-4xl text-bold mb-4">Create New Post</h1>
-        <a href="/admin/posts" class="btn">← Back to Posts</a>
-    </div>
+<div class="mb-8">
+    <h1 class="title">Create New Post</h1>
+    <a href="/admin/posts" class="btn-secondary">← Back to Posts</a>
+</div>
 
-    {{ if .error }}
-        <div class="error-message">{{ .error }}</div>
-    {{ end }}
-
-    <div class="editor-container">
-          <div x-inity="posts"></div>
-    </div>
+<div class="app-container">
+        <div x-inity="posts"></div>
 </div>
 {{ template "admin_footer" . }}

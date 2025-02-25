@@ -117,7 +117,6 @@ func RegisterAdminRoutes(repos *repository.Repositories, storage storage.Provide
 
 	// Settings
 	admin.Get("/settings", adminHandlers.ShowSettings)
-	admin.Post("/settings", adminHandlers.UpdateSettings)
 
 	admin.Use("/", flash.Middleware())
 
@@ -126,6 +125,8 @@ func RegisterAdminRoutes(repos *repository.Repositories, storage storage.Provide
 	api.Get("/tags", adminHandlers.ApiGetTags)
 	api.Get("/media", adminMediaHandlers.ApiGetMediaList)
 
+	api.Post("/settings", adminHandlers.ApiUpdateSettings)
+
 	// Posts API routes
 	api.Post("/posts", adminHandlers.ApiCreatePost)
 	api.Put("/posts/:id", adminHandlers.ApiUpdatePost)
@@ -133,6 +134,10 @@ func RegisterAdminRoutes(repos *repository.Repositories, storage storage.Provide
 	// Pages API routes
 	api.Post("/pages", adminHandlers.ApiCreatePage)
 	api.Put("/pages/:id", adminHandlers.ApiUpdatePage)
+
+	// logo API routes
+	api.Post("/logo", adminHandlers.ApiUploadLogo)
+	api.Delete("/logo", adminHandlers.ApiDeleteLogo)
 
 	return app
 }

@@ -1,25 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + Svelte</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Captain Admin</title>
   </head>
-  <body>
-
+  <body class="dark:bg-gray-900">
+    <!-- Content Area -->
     <div class="max-w-5xl mx-auto p-6">
-      <h1 class="text-2xl font-bold mb-4 text-gray-900">Posts</h1>
-      <div x-inity="posts" x-props='{ "publish": "scheduled" }'></div>
+      <h1 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Settings</h1>
+      <div x-inity="settings">
+        {"codeThemeOptions": [
+          {"name": "Solarized Light", "value": "solarized-light"},
+          {"name": "Solarized Dark", "value":"solarized-dark"},
+          {"name": "Github", "value":"github"},
+          {"name": "TTCN", "value":"ttcn"},
+          {"name": "Monokai", "value":"monokai"}
+        ]}
+      </div>
     </div>
     <hr>
 
     <div class="max-w-5xl mx-auto p-6">
-      <h1 class="text-2xl font-bold mb-4 text-gray-900">Pages</h1>
+      <h1 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Posts</h1>
+      <div x-inity="posts">
+        {"title": "My First Post"}
+      </div>
+    </div>
+    <hr>
+
+    <div class="max-w-5xl mx-auto p-6">
+      <h1 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Pages</h1>
       <div x-inity="pages"></div>
     </div>
     <hr>
-
-
-  <script type="module" src="./dev.ts"></script>
+    <script type="module" src="./dev.ts"></script>
   </body>
 </html>

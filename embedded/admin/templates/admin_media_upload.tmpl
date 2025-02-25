@@ -1,11 +1,9 @@
 {{ template "admin_header" . }}
 
-<div class="admin-page">
-    <div class="page-header">
-        <h1>Upload Media</h1>
-        <div class="actions">
-            <a href="/admin/media" class="btn">Back to Media Library</a>
-        </div>
+<div class="p-4">
+    <div class="mb-8">
+        <h1 class="title">Upload Media</h1>
+        <a href="/admin/media" class="btn-secondary">← Back to Media Library</a>
     </div>
 
     {{ if .error }}
@@ -18,7 +16,7 @@
         <form action="/admin/media/upload" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="file">File</label>
-                <input type="file" id="file" name="file" required accept=".jpg, .jpeg, .png, .gif, .webp, .pdf, .doc, .docx">
+                <input type="file" id="file" name="file" required accept=".jpg, .jpeg, .png, .gif, .webp, .pdf, .doc, .docx" class="btn-secondary">
                 <p>
                     <small class="form-text">Supported formats: images (jpg, png, gif, webp), documents (pdf, doc, docx), and more.</small>
                 </p>
@@ -37,7 +35,7 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Upload</button>
+                <button type="submit" class="btn-primary">Upload</button>
             </div>
         </form>
     </div>

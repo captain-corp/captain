@@ -2,7 +2,10 @@ package handlers
 
 import (
 	"fmt"
+	"log"
+	"mime"
 	"net/http"
+	"path/filepath"
 	"time"
 
 	"github.com/captain-corp/captain/flash"
@@ -34,6 +37,14 @@ type pageRequest struct {
 	Content     string `json:"content"`
 	ContentType string `json:"contentType"`
 	Visible     bool   `json:"visible"`
+}
+
+type settingsRequest struct {
+	CodeHighlightTheme string `json:"codeHighlightTheme"`
+	PostsPerPage       int    `json:"postsPerPage"`
+	Title              string `json:"title"`
+	Subtitle           string `json:"subtitle"`
+	UseLogoAsFavicon   bool   `json:"useLogoAsFavicon"`
 }
 
 type publishedTime struct {
@@ -296,4 +307,136 @@ func (h *AdminHandlers) ApiGetTags(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(response)
+}
+
+// ApiUpdateSettings handles the POST /api/settings route
+func (h *AdminHandlers) ApiUpdateSettings(c *fiber.Ctx) error {
+	var logo *models.Media
+	settings, _ := h.repos.Settings.Get()
+	settingsPost := new(settingsRequest)
+
+	if err := c.BodyParser(settingsPost); err != nil {
+		// TODO: Log error
+		fmt.Printf("Failed to parse request body: %v\n", err)
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
+	}
+
+	settings.Title = settingsPost.Title
+	settings.Subtitle = settingsPost.Subtitle
+	settings.ChromaStyle = settingsPost.CodeHighlightTheme
+	settings.PostsPerPage = settingsPost.PostsPerPage
+	settings.UseLogoAsFavicon = settingsPost.UseLogoAsFavicon
+
+	if settings.LogoID != nil {
+		media, err := h.repos.Media.FindByID(*settings.LogoID)
+		if err != nil {
+			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to find logo"})
+		}
+		logo = media
+	} else {
+		settings.UseLogoAsFavicon = false
+	}
+
+	if err := h.repos.Settings.Update(settings); err != nil {
+		// TODO: Log error
+		fmt.Printf("Failed to update settings: %v\n", err)
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to update settings"})
+	}
+
+	if settingsPost.UseLogoAsFavicon && logo != nil {
+		if err := GenerateFavicons(h.repos, logo, h.storage); err != nil {
+			log.Printf("Warning: favicon generation failed: %v", err)
+		}
+	}
+
+	return c.JSON(fiber.Map{"success": true})
+}
+
+// ApiUploadLogo handles logo upload and favicon generation
+func (h *AdminHandlers) ApiUploadLogo(c *fiber.Ctx) error {
+	file, err := c.FormFile("logo")
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"error": "No logo file uploaded",
+		})
+	}
+
+	// Save to storage
+	contents, err := file.Open()
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to open logo file",
+		})
+	}
+	uploadedFile, err := h.storage.Save(file.Filename, contents)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to save logo",
+		})
+	}
+
+	// Create media record
+	media := &models.Media{
+		Name:     file.Filename,
+		Path:     uploadedFile,
+		MimeType: mime.TypeByExtension(filepath.Ext(file.Filename)),
+		Size:     file.Size,
+	}
+
+	if err := h.repos.Media.Create(media); err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to create media record",
+		})
+	}
+
+	// Update settings with new logo ID
+	settings, _ := h.repos.Settings.Get()
+	settings.LogoID = &media.ID
+	if err := h.repos.Settings.Update(settings); err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to update settings",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "Logo uploaded successfully",
+		"logoUrl": media.Path,
+	})
+}
+
+// ApiDeleteLogo handles logo removal
+func (h *AdminHandlers) ApiDeleteLogo(c *fiber.Ctx) error {
+	settings, _ := h.repos.Settings.Get()
+	if settings.LogoID == nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"error": "No logo to delete",
+		})
+	}
+
+	media, err := h.repos.Media.FindByID(*settings.LogoID)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to find logo",
+		})
+	}
+
+	// Remove media record
+	if err := h.repos.Media.Delete(media); err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to delete logo record",
+		})
+	}
+
+	// Clear logo ID and favicon setting
+	settings.LogoID = nil
+	settings.UseLogoAsFavicon = false
+	if err := h.repos.Settings.Update(settings); err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to update settings",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "Logo removed successfully",
+	})
 }

@@ -112,7 +112,7 @@ test.describe('Admin Panel E2E Tests', () => {
             const pageSlug = 'test-page';
 
             await page.click('text=Pages');
-            await page.click('text=Create New Page');
+            await page.click('text=Create Your First Page');
             await page.locator('input[name="title"]').pressSequentially(pageTitle);
             const slugValue = await page.locator('input[name="slug"]').inputValue();
             expect(slugValue).toBe(pageSlug);
@@ -137,7 +137,7 @@ test.describe('Admin Panel E2E Tests', () => {
             await page.click('text=Menu Items');
 
             // Create custom URL menu item
-            await page.click('text=Create New Menu Item');
+            await page.click('text=Create your first menu item!');
             await page.fill('input[name="label"]', 'Custom Link');
             await page.fill('input[name="url"]', 'https://example.com');
             await page.click('button:has-text("Create Menu Item")');
@@ -181,18 +181,14 @@ test.describe('Admin Panel E2E Tests', () => {
 
             await page.fill('input[name="title"]', 'Updated Title');
             await page.fill('input[name="subtitle"]', 'Updated Subtitle');
-            await page.selectOption('select[name="theme"]', 'dark');
-            await page.fill('input[name="posts_per_page"]', '1');
+            await page.fill('input[name="posts-per-page"]', '1');
 
-            const settingsSaveResponse = page.waitForResponse('**/admin/settings');
-            await page.click('button:has-text("Save Settings")');
-
-            const response = await settingsSaveResponse;
-            await expect(response.status()).toBe(302);
+            await page.click('button:has-text("Save")');
+            await expect(page.locator('button:has-text("Saved")')).toBeVisible();
 
             // Verify post time updated
             await page.goto('/admin/posts');
-            const thirdPost = page.locator('tr').nth(3);
+            const thirdPost = page.locator('tbody tr').nth(2);
             const publishedAt = await thirdPost.locator('td').nth(2).textContent();
             expect(publishedAt).toContain('October 26, 1985 at 11:00 AM');
 
