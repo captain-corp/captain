@@ -8,7 +8,7 @@
   /* Typography */
 
   .title {
-    @apply text-4xl font-bold mb-4 text-gray-900 dark:text-gray-400;
+    @apply text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-gray-400;
   }
 
   /* Buttons */
