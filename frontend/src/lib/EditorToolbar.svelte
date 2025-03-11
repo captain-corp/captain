@@ -38,6 +38,7 @@
   }
 
   function injectBeforeCursor(before: string, text: string): void {
+    console.log
     const cursorPosition = target.selectionStart;
     const newCursorPosition = cursorPosition + before.length + text.length;
     target.setRangeText(before + ' ' + text);
@@ -95,7 +96,7 @@
     event.preventDefault();
     const selectedText = getSelectedText();
 
-    const command = (event.target as HTMLButtonElement).dataset['command'];
+    const command = (this as HTMLButtonElement).dataset['command'];
     commands[command](selectedText);
   }
 </script>
