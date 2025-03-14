@@ -124,6 +124,7 @@ func RegisterAdminRoutes(repos *repository.Repositories, storage storage.Provide
 	api := admin.Group("/api")
 	api.Get("/tags", adminHandlers.ApiGetTags)
 	api.Get("/media", adminMediaHandlers.ApiGetMediaList)
+	api.Get("/media/paths", adminMediaHandlers.ApiGetMediaListWithPaths)
 
 	api.Post("/settings", adminHandlers.ApiUpdateSettings)
 

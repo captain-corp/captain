@@ -46,6 +46,10 @@
     target.focus();
   }
 
+  function displayImageModal() {
+    // TODO: display image modal
+  }
+
   const commands = {
     Bold: (text: string): void => {
       surroundSelection('**', '**', text);
@@ -131,7 +135,7 @@
   </button>
   <button
     data-command="Image"
-    onclick={executeCommand}
+    onclick={displayImageModal}
     class="border border-black dark:border-gray-400 text-black dark:text-white"
   >
     <ImageSolid class="w-4 h-6" />

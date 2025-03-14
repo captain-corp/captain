@@ -289,6 +289,49 @@ func (h *AdminMediaHandlers) ApiGetMediaList(c *fiber.Ctx) error {
 	return c.JSON(media)
 }
 
+// mediaWithPathResponse struct for API responses with full paths
+type mediaWithPathResponse struct {
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`
+	Path        string `json:"path"`
+	FullPath    string `json:"fullPath"`
+	MimeType    string `json:"mimeType"`
+	Size        int64  `json:"size"`
+	Description string `json:"description"`
+	CreatedAt   string `json:"createdAt"`
+}
+
+// ApiGetMediaListWithPaths returns a JSON list of media including full paths
+func (h *AdminMediaHandlers) ApiGetMediaListWithPaths(c *fiber.Ctx) error {
+	// Get media from repository
+	media, err := h.mediaRepo.FindAll()
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch media"})
+	}
+
+	// Map media to response with full paths
+	response := make([]mediaWithPathResponse, len(media))
+	for i, m := range media {
+		// For the full path, we'll use the public URL format
+		// This assumes media are served from /media/{path} in the application
+		baseURL := c.BaseURL() // Get base URL of the current request
+		fullPath := fmt.Sprintf("%s/media/%s", baseURL, m.Path)
+
+		response[i] = mediaWithPathResponse{
+			ID:          m.ID,
+			Name:        m.Name,
+			Path:        m.Path,
+			FullPath:    fullPath,
+			MimeType:    m.MimeType,
+			Size:        m.Size,
+			Description: m.Description,
+			CreatedAt:   m.CreatedAt.Format(time.RFC3339),
+		}
+	}
+
+	return c.JSON(response)
+}
+
 // ApiGetTags returns a list of tags for API consumption
 func (h *AdminHandlers) ApiGetTags(c *fiber.Ctx) error {
 	tags, err := h.repos.Tags.FindAll()

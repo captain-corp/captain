@@ -10,7 +10,7 @@ export const Inity = {
     [key: string]: InityProps;
   },
 
-  register(name: string, Component: Component, props: any | null): void {
+  register(name: string, Component: Component, props: any | null = null): void {
     this.data[name] = {
       Component,
       props,
@@ -42,12 +42,14 @@ export const Inity = {
         Object.assign(props, this.data[name].props);
         Object.assign(props, element.dataset);
 
-        for (const [key, value] of Object.entries(this.data[name].props)) {
-          if (value instanceof Function) {
-            function wrapper(...args: any[]) {
-              (value as Function)(...args, props);
+        if (this.data[name].props) {
+          for (const [key, value] of Object.entries(this.data[name].props)) {
+            if (value instanceof Function) {
+              function wrapper(...args: any[]) {
+                (value as Function)(...args, props);
+              }
+              props[key] = wrapper;
             }
-            props[key] = wrapper;
           }
         }
 
