@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Button, P, Gallery, Spinner, Hr } from 'flowbite-svelte';
+  import { Button, P, Spinner, Hr } from 'flowbite-svelte';
   import FileDropzone from './FileDropzone.svelte';
 
   // Define the media item interface to match Gallery component expectations
@@ -11,7 +11,9 @@
 
   const {
     mediaProvider,
-    onMediaSelect = (media: MediaItem) => {}, // Callback when media is selected
+    onMediaSelect = (media: MediaItem) => {
+      console.log('default', media);
+    }, // Callback when media is selected
     uploadHandler = (
       files: File[],
       uploadStarted: () => void,

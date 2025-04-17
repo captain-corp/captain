@@ -26,7 +26,7 @@ export const Inity = {
         let props: any = {};
         let elementPropsText: string = element.textContent || '';
 
-        if (elementPropsText) {
+        if (elementPropsText.trim() !== '') {
           try {
             props = JSON.parse(elementPropsText);
             element.textContent = '';

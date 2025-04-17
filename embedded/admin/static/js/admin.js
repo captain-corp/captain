@@ -408,6 +408,41 @@ function initializeDarkModeToggle() {
         },
     });
 
+
+    Inity.register("media-picker", Apps.MediaPicker, {
+        mediaProvider: async (done, error) => {
+            const resp = await fetch('/admin/api/media', {
+                method: 'GET',
+            });
+            const json = await resp.json();
+            if (!resp.ok) {
+                error(json.error);
+            }
+            done(json);
+        },
+        onMediaSelect: (media) => {
+            console.log(media);
+        },
+        onMediaUpload: async (files, uploadStarted, uploadFinished) => {
+            const data = new FormData();
+            data.append('file', files[0]);
+            data.append('filename', files[0].name);
+
+            const resp = await fetch('/admin/api/media/upload', {
+                method: 'POST',
+                body: data,
+            });
+
+            if (resp.ok) {
+                const json = await resp.json();
+                uploadFinished(null, '/media/' + json.mediaUrl);
+            } else {
+                uploadFinished(json.error, null);
+            }
+            uploadStarted();
+        },
+    });
+
     document.addEventListener("DOMContentLoaded", () => Inity.attach());
 })();
 

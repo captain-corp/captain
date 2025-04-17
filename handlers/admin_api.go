@@ -279,6 +279,16 @@ func (h *AdminHandlers) ApiUpdatePage(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"message": "Page updated successfully", "redirect": "/admin/pages"})
 }
 
+// mediaWithPathResponse struct for API responses with full paths
+type mediaWithPathResponse struct {
+	Name        string `json:"name"`
+	Src         string `json:"src"`
+	MimeType    string `json:"mimeType"`
+	Size        int64  `json:"size"`
+	Description string `json:"description"`
+	CreatedAt   string `json:"createdAt"`
+}
+
 // ApiGetMediaList returns a JSON list of media for AJAX requests
 func (h *AdminMediaHandlers) ApiGetMediaList(c *fiber.Ctx) error {
 	media, err := h.mediaRepo.FindAll()
@@ -286,42 +296,11 @@ func (h *AdminMediaHandlers) ApiGetMediaList(c *fiber.Ctx) error {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch media"})
 	}
 
-	return c.JSON(media)
-}
-
-// mediaWithPathResponse struct for API responses with full paths
-type mediaWithPathResponse struct {
-	ID          uint   `json:"id"`
-	Name        string `json:"name"`
-	Path        string `json:"path"`
-	FullPath    string `json:"fullPath"`
-	MimeType    string `json:"mimeType"`
-	Size        int64  `json:"size"`
-	Description string `json:"description"`
-	CreatedAt   string `json:"createdAt"`
-}
-
-// ApiGetMediaListWithPaths returns a JSON list of media including full paths
-func (h *AdminMediaHandlers) ApiGetMediaListWithPaths(c *fiber.Ctx) error {
-	// Get media from repository
-	media, err := h.mediaRepo.FindAll()
-	if err != nil {
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch media"})
-	}
-
-	// Map media to response with full paths
-	response := make([]mediaWithPathResponse, len(media))
+	mediaResponse := make([]mediaWithPathResponse, len(media))
 	for i, m := range media {
-		// For the full path, we'll use the public URL format
-		// This assumes media are served from /media/{path} in the application
-		baseURL := c.BaseURL() // Get base URL of the current request
-		fullPath := fmt.Sprintf("%s/media/%s", baseURL, m.Path)
-
-		response[i] = mediaWithPathResponse{
-			ID:          m.ID,
+		mediaResponse[i] = mediaWithPathResponse{
 			Name:        m.Name,
-			Path:        m.Path,
-			FullPath:    fullPath,
+			Src:         fmt.Sprintf("/media/%s", m.Path),
 			MimeType:    m.MimeType,
 			Size:        m.Size,
 			Description: m.Description,
@@ -329,7 +308,12 @@ func (h *AdminMediaHandlers) ApiGetMediaListWithPaths(c *fiber.Ctx) error {
 		}
 	}
 
-	return c.JSON(response)
+	return c.JSON(mediaResponse)
+}
+
+func (h *AdminMediaHandlers) ApiUploadMedia(c *fiber.Ctx) error {
+
+	return nil
 }
 
 // ApiGetTags returns a list of tags for API consumption

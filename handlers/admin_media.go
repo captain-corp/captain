@@ -29,16 +29,9 @@ func NewAdminMediaHandlers(repos *repository.Repositories, storage storage.Provi
 
 // ListMedia displays the list of media files
 func (h *AdminMediaHandlers) ListMedia(c *fiber.Ctx) error {
-	media, err := h.mediaRepo.FindAll()
-	if err != nil {
-		return c.Status(http.StatusInternalServerError).Render("admin_500", fiber.Map{
-			"error": err.Error(),
-		})
-	}
 
 	return c.Render("admin_media_list", fiber.Map{
 		"title": "Media Library",
-		"media": media,
 	})
 }
 
